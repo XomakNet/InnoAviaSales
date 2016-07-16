@@ -10,4 +10,12 @@ import java.util.List;
  */
 public class OneWaySearchAnswer extends SearchAnswer {
     private List<Flight> flights;
+
+    public OneWaySearchAnswer(final List<Flight> flights) {
+        this.flights = flights;
+    }
+
+    public List<Flight> getFlights() {
+        return flights;
+    }
 }

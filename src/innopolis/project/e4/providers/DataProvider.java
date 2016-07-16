@@ -16,6 +16,8 @@ public interface DataProvider {
 
     List<Flight> getFlightsBetween(Airport from, Airport to);
 
+    List<Airport> getAirportsConnectedWith(Airport from);
+
     User getUserById();
 
     List<User> getAllUsers();

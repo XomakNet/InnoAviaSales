@@ -11,4 +11,17 @@ import java.util.List;
 public class RoundTripSearchAnswer extends SearchAnswer {
     private List<Flight> directFlights;
     private List<Flight> returnFlights;
+
+    public RoundTripSearchAnswer(final List<Flight> directFlights, final List<Flight> returnFlights) {
+        this.directFlights = directFlights;
+        this.returnFlights = returnFlights;
+    }
+
+    public List<Flight> getDirectFlights() {
+        return directFlights;
+    }
+
+    public List<Flight> getReturnFlights() {
+        return returnFlights;
+    }
 }
