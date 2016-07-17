@@ -19,4 +19,20 @@ public class User {
         this.passportData = passportData;
         this.dateOfBirth = dateOfBirth;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return id == user.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

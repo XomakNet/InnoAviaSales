@@ -9,19 +9,19 @@ import java.util.List;
  * Stores answer on user's request for a round trip
  */
 public class RoundTripSearchAnswer extends SearchAnswer {
-    private List<Flight> directFlights;
-    private List<Flight> returnFlights;
+    private List<List<Flight>> directFlights;
+    private List<List<Flight>> returnFlights;
 
-    public RoundTripSearchAnswer(final List<Flight> directFlights, final List<Flight> returnFlights) {
+    public RoundTripSearchAnswer(final List<List<Flight>> directFlights, final List<List<Flight>> returnFlights) {
         this.directFlights = directFlights;
         this.returnFlights = returnFlights;
     }
 
-    public List<Flight> getDirectFlights() {
+    public List<List<Flight>> getDirectFlights() {
         return directFlights;
     }
 
-    public List<Flight> getReturnFlights() {
+    public List<List<Flight>> getReturnFlights() {
         return returnFlights;
     }
 }

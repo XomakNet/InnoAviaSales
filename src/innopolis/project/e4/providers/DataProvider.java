@@ -4,25 +4,37 @@ import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
 import innopolis.project.e4.models.User;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by Xomak on 15.07.2016.
- * Abstract interface, which describes methods, needed to communicate between application and datasource
+/***
+ * CSV-files based data-provider
  */
-public interface DataProvider {
+public class DataProvider {
+    private HashMap<Airport, HashMap<Airport, List<Flight>>> flightsByAirports;
 
-    List<Airport> getAllAirports();
+    public Set<Airport> getAllAirports() {
+        return null;
+    }
 
-    List<Flight> getFlightsBetween(Airport from, Airport to);
+    public Set<Flight> getFlightsBetween(Airport from, Airport to) {
+        return null;
+    }
 
-    List<Airport> getAirportsConnectedWith(Airport from);
+    public User getUserById() {
+        return null;
+    }
 
-    User getUserById();
+    public Set<User> getAllUsers() {
+        return null;
+    }
 
-    List<User> getAllUsers();
+    public boolean putUser(final User user) {
+        return false;
+    }
 
-    boolean putUser(User user);
-
-    boolean putFlight(Flight flight);
+    public boolean putFlight(final Flight flight) {
+        return false;
+    }
 }
