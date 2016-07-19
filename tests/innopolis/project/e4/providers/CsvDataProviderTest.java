@@ -17,10 +17,10 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 /**
- * DataProvider test class
+ * CsvDataProvider test class
  */
-public class DataProviderTest {
-    private DataProvider dp;
+public class CsvDataProviderTest {
+    private CsvDataProvider dp;
     private List<Airport> airports = new LinkedList<>();
     private HashMap<Airport, HashMap<Airport, Set<Flight>>> flightsByAirports;
     private Random rand = new Random();
@@ -138,7 +138,7 @@ public class DataProviderTest {
     public void init() throws Exception {
         System.out.println("Setting up ...: " + generateTestData().toString());
         System.out.println(airports);
-        dp = new DataProvider(generateTestData().toString());
+        dp = new CsvDataProvider(generateTestData().toString());
     }
 
     @After

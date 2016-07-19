@@ -1,7 +1,7 @@
 package innopolis.project.e4.managers;
 
 import innopolis.project.e4.models.User;
-import innopolis.project.e4.providers.DataProvider;
+import innopolis.project.e4.providers.CsvDataProvider;
 
 /**
  * Created by Xomak on 14.07.2016.
@@ -9,7 +9,7 @@ import innopolis.project.e4.providers.DataProvider;
  */
 public class UserManager {
 
-    private DataProvider dataProvider;
+    private CsvDataProvider dataProvider;
 
     public User getUserById() {
         return null;

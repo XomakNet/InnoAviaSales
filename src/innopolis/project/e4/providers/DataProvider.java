@@ -4,41 +4,21 @@ import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
 import innopolis.project.e4.models.User;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
-/***
- * CSV-files based data-provider
- */
-public class DataProvider {
-    private HashMap<Airport, HashMap<Airport, List<Flight>>> flightsByAirports;
+public interface DataProvider {
 
-    public Set<Airport> getAllAirports() {
-        return null;
-    }
+    Set<Airport> getAllAirports();
 
-    public Set<Airport> getAirportsAchievableFrom(final Airport from) {
-        return null;
-    }
+    Set<Airport> getAirportsAchievableFrom(final Airport from);
 
-    public Set<Flight> getFlightsBetween(Airport from, Airport to) {
-        return null;
-    }
+    Set<Flight> getFlightsBetween(Airport from, Airport to);
 
-    public User getUserById(final int id) {
-        return null;
-    }
+    User getUserById(final int id);
 
-    public Set<User> getAllUsers() {
-        return null;
-    }
+    Set<User> getAllUsers();
 
-    public boolean putUser(final User user) {
-        return false;
-    }
+    boolean putUser(final User user);
 
-    public boolean putFlight(final Flight flight) {
-        return false;
-    }
+    boolean putFlight(final Flight flight);
 }
