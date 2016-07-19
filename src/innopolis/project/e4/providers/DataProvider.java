@@ -187,4 +187,8 @@ public class DataProvider {
         }
         return true;
     }
+
+    public HashMap<Airport, HashMap<Airport, HashSet<Flight>>> getAirportsMates(){
+        return flightsByAirports;
+    }
 }
