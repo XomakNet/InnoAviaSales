@@ -2,6 +2,7 @@ package innopolis.project.e4.providers;
 
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +17,12 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 /**
- * Created by Xomak on 18.07.2016.
+ * DataProvider test class
  */
 public class DataProviderTest {
     private DataProvider dp;
     private List<Airport> airports = new LinkedList<>();
-    private List<Flight> flights = new LinkedList<>();
+    private HashMap<Airport, HashMap<Airport, Set<Flight>>> flightsByAirports;
     private Random rand = new Random();
 
     private String generateRandomString(int number) {
@@ -90,17 +91,34 @@ public class DataProviderTest {
         Set<Flight> generatedFlights = generateFlights(number, airline);
         Iterator<Flight> iterator = generatedFlights.iterator();
         PrintWriter writer = new PrintWriter(path+"/"+airline+".csv", "UTF-8");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Flight curr = iterator.next();
             writer.println(String.format("\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"",
                     curr.getFlightNumber(), curr.getFrom().getName(), curr.getTo().getName(), dateFormat.format(curr.getDepartureDateTime()),
                     dateFormat.format(curr.getArrivalDateTime()), curr.getCost(), curr.getFreePlaces()));
+            if (flightsByAirports.containsKey(curr.getFrom())) {
+                HashMap<Airport, Set<Flight>> flightsToAirport = flightsByAirports.get(curr.getFrom());
+                if (flightsToAirport.containsKey(curr.getTo())) {
+                    Set<Flight> flights = flightsToAirport.get(curr.getTo());
+                    flights.add(curr);
+                }
+                else {
+                    Set<Flight> flights = new HashSet<>();
+                    flights.add(curr);
+                    flightsToAirport.put(curr.getTo(), flights);
+                }
+            }
+            else {
+                Set<Flight> flights = new HashSet<>();
+                flights.add(curr);
+                HashMap<Airport, Set<Flight>> flightsToAirport = new HashMap<>();
+                flightsToAirport.put(curr.getTo(), flights);
+                flightsByAirports.put(curr.getFrom(), flightsToAirport);
+            }
         }
         writer.close();
-
-        flights.addAll(generatedFlights);
 
     }
 
@@ -118,7 +136,7 @@ public class DataProviderTest {
 
     @Before
     public void init() throws Exception {
-        System.out.println("Setting up ...: "+generateTestData().toString());
+        System.out.println("Setting up ...: " + generateTestData().toString());
         System.out.println(airports);
         dp = new DataProvider(generateTestData().toString());
     }
@@ -130,8 +148,50 @@ public class DataProviderTest {
     }
 
     @Test
-    public void testRandomRead() {
-        System.out.println("Some test");
+    public void testGetAirportsAchievableFrom() {
+        Iterator<Airport> fromIterator = flightsByAirports.keySet().iterator();
+        while(fromIterator.hasNext()) {
+            Airport currentFrom = fromIterator.next();
+            Set<Airport> resultFromTested = dp.getAirportsAchievableFrom(currentFrom);
+            Set<Airport> resultFromOriginal = flightsByAirports.get(currentFrom).keySet();
+            assertEquals(resultFromOriginal, resultFromTested);
+        }
+
+    }
+
+    @Test
+    public void testGetFlightsBetween() {
+        Iterator<Airport> airportsIteratorFirst = airports.iterator();
+        while(airportsIteratorFirst.hasNext()) {
+            Iterator<Airport> airportsIteratorSecond = airports.iterator();
+            Airport fromAirport = airportsIteratorFirst.next();
+            while(airportsIteratorSecond.hasNext()) {
+                Airport toAirport = airportsIteratorSecond.next();
+                Set<Flight> testResult = dp.getFlightsBetween(fromAirport, toAirport);
+                if(flightsByAirports.containsKey(fromAirport)) {
+                    HashMap<Airport, Set<Flight>> flightsFromAirport = flightsByAirports.get(fromAirport);
+                    if(flightsFromAirport.containsKey(toAirport)) {
+                        Set<Flight> flightsBetween = flightsFromAirport.get(toAirport);
+                        assertEquals(testResult, flightsBetween);
+                    }
+                    else {
+                        assertNull(testResult);
+                    }
+                }
+                else {
+                    assertNull(testResult);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testPutUser() {
+        int id = rand.nextInt(10000);
+        assertNull(dp.getUserById(id));
+        User userAdded = new User(id, "Test user", "Test data", new Date());
+        dp.putUser(userAdded);
+        assertEquals(dp.getUserById(id), userAdded);
     }
 
 }

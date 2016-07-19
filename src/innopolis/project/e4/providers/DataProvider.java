@@ -18,11 +18,15 @@ public class DataProvider {
         return null;
     }
 
+    public Set<Airport> getAirportsAchievableFrom(final Airport from) {
+        return null;
+    }
+
     public Set<Flight> getFlightsBetween(Airport from, Airport to) {
         return null;
     }
 
-    public User getUserById() {
+    public User getUserById(final int id) {
         return null;
     }
 
