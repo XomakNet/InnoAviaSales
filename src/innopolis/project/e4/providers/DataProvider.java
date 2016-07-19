@@ -20,19 +20,21 @@ import static java.lang.System.in;
  */
 public class DataProvider {
     private HashMap<Airport, HashMap<Airport, HashSet<Flight>>> flightsByAirports;
+    private HashMap<Integer, User> users;
     private File fileSource;
     private String fileSoursesPath;
     private LinkedList<File> companyCSV;
     private File usersFile;
     private HashMap<String, Airport> airports;
     private HashSet<Flight> flights;
-    private String extentionOfDataSourceFile = ".CSV";
+    private String extentionOfDataSourceFile = ".csv";
     private String separator = ",";
     private String border = "\"";
     private int numOfFieldsInCSV = 7;
 
     public  DataProvider(String path){
 
+        users = new HashMap<>();
         fileSoursesPath = path;
         fileSource = new File(fileSoursesPath);
 
@@ -47,6 +49,7 @@ public class DataProvider {
             }
         }
         parseFlightsCSV();
+        parseUserCSV();
     }
 
     private boolean parseFlightsCSV() {
@@ -103,26 +106,85 @@ public class DataProvider {
 
 
     public Set<Airport> getAllAirports() {
+        if(flightsByAirports!=null){
+            return  flightsByAirports.keySet();
+        }
         return null;
     }
 
     public Set<Flight> getFlightsBetween(Airport from, Airport to) {
+        if(flightsByAirports.containsKey(from)){
+            if(flightsByAirports.get(from).containsKey(to))
+                return flightsByAirports.get(from).get(to);
+        }
         return null;
     }
 
-    public User getUserById() {
+    private void parseUserCSV(){
+        BufferedReader bufReader;
+        File f = usersFile;
+            try {
+                bufReader = new BufferedReader(new FileReader(f));
+                String readingLine = "";
+                while ((readingLine = bufReader.readLine()) != null) {
+                    String[] line = readingLine.split(separator);
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date dateD = df.parse(line[4]);
+                    users.put(Integer.parseInt(line[0]), new User(Integer.parseInt(line[0]), line[1] + " " + line[2], line[3], dateD));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public User getUserById(int id) {
+        if(users.containsKey(id))
+            return users.get(id);
         return null;
     }
 
     public Set<User> getAllUsers() {
+        if(users!=null){
+            Set<User> tmpUsers = new HashSet<>();
+            for (User user: users.values()) {
+                tmpUsers.add(user);
+            }
+            return tmpUsers;
+        }
         return null;
     }
 
     public boolean putUser(final User user) {
-        return false;
+        if(users.containsKey(user.getID()))
+            return false;
+        else
+            users.put(user.getID(), user);
+        return true;
     }
 
     public boolean putFlight(final Flight flight) {
-        return false;
+        if(flightsByAirports.containsKey(flight.getFrom())){
+            if(flightsByAirports.get(flight.getFrom()).containsKey(flight.getTo())) {
+                if (flightsByAirports.get(flight.getFrom()).get(flight.getTo()).contains(flight)){
+                    return false;
+                }else{
+                    flightsByAirports.get(flight.getFrom()).get(flight.getTo()).add(flight);
+                }
+            }else{
+                flightsByAirports.get(flight.getFrom()).put(flight.getTo(), new HashSet<Flight>());
+                flightsByAirports.get(flight.getFrom()).get(flight.getTo()).add(flight);
+            }
+        }else{
+            HashMap<Airport, HashSet<Flight>> tmpHM = new HashMap<>();
+            tmpHM.put(flight.getTo(), new HashSet<Flight>());
+            tmpHM.get(flight.getTo()).add(flight);
+            Airport airport = flight.getFrom();
+            flightsByAirports.put(airport, tmpHM);
+        }
+        return true;
     }
 }
