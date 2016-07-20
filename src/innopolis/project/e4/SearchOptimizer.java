@@ -34,11 +34,12 @@ public class SearchOptimizer {
         minimalPathName.push(src);
         dfsFlighting(src, dst);
         //run func dfs;
+        return null;
     }
 
     private void dfsFlighting(final Airport src,
                                         final Airport dst) {
-        List<Airport> neighbours = getAirportsMates(src);
+        List<Airport> neighbours = null;//getAirportsMates(src);
 
         for(int i = 0; i < neighbours.size(); i++) {
             minimalPathName.push(neighbours.get(i));

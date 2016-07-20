@@ -3,6 +3,7 @@ package innopolis.project.e4;
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
 import innopolis.project.e4.models.Path;
+import innopolis.project.e4.providers.DataProvider;
 import innopolis.project.e4.providers.TestDataProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
  */
 public class SearchOptimizerTest {
     private SearchOptimizer so;
-    private TestDataProvider dp;
+    private TestDataProvider dp = new TestDataProvider();
     private Random rand = new Random();
 
     private int randBetween(int start, int end) {

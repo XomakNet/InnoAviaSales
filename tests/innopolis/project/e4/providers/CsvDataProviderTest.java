@@ -137,7 +137,6 @@ public class CsvDataProviderTest {
     @Before
     public void init() throws Exception {
         System.out.println("Setting up ...: " + generateTestData().toString());
-        System.out.println(airports);
         dp = new CsvDataProvider(generateTestData().toString());
     }
 
@@ -172,7 +171,7 @@ public class CsvDataProviderTest {
                     HashMap<Airport, HashSet<Flight>> flightsFromAirport = flightsByAirports.get(fromAirport);
                     if(flightsFromAirport.containsKey(toAirport)) {
                         Set<Flight> flightsBetween = flightsFromAirport.get(toAirport);
-                        assertEquals(testResult, flightsBetween);
+                        assertEquals(flightsBetween, testResult);
                     }
                     else {
                         assertNull(testResult);
