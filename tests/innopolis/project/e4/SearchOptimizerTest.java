@@ -2,6 +2,7 @@ package innopolis.project.e4;
 
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.Path;
 import innopolis.project.e4.providers.TestDataProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,9 +85,10 @@ public class SearchOptimizerTest {
             }
             previous = current;
         }
-        List<Flight> testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
-        assertEquals(testResult, result);
-        testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
+        List<Path> testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
+        assertEquals(result.size(), 1);
+        assertEquals(testResult.get(0).getFlightsSequence(), result);
+        testResult = so.getPathesBetween(from, to, date, SearchOptimizer.Criterion.COST);
         assertNull(testResult);
     }
 }

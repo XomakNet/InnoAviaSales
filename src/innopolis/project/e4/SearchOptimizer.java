@@ -2,6 +2,7 @@ package innopolis.project.e4;
 
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.Path;
 import innopolis.project.e4.providers.DataProvider;
 
 import java.util.*;
@@ -22,11 +23,11 @@ public class SearchOptimizer {
         this.provider = provider;
     }
 
-    public void rebuildPathes() {
+    public void rebuildPaths() {
 
     }
 //curr посещенные вершины
-    public List<Flight> getPathesBetween(final Airport src,
+    public List<Path> getPathesBetween(final Airport src,
                                          final Airport dst,
                                          final Date date,
                                          final Criterion criterion) {

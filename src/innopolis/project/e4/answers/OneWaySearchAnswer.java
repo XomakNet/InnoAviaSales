@@ -1,6 +1,6 @@
 package innopolis.project.e4.answers;
 
-import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.Path;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import java.util.List;
  * Stores answer on user's request for a round trip
  */
 public class OneWaySearchAnswer extends SearchAnswer {
-    private List<Flight> flights;
+    private List<Path> paths;
 
-    public OneWaySearchAnswer(final List<Flight> flights) {
-        this.flights = flights;
+    public OneWaySearchAnswer(final List<Path> paths) {
+        this.paths = paths;
     }
 
-    public List<Flight> getFlights() {
-        return flights;
+    public List<Path> getPaths() {
+        return paths;
     }
 }
