@@ -1,6 +1,5 @@
 package innopolis.project.e4;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
 import innopolis.project.e4.providers.DataProvider;
