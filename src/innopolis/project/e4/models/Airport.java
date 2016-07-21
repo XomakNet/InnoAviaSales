@@ -26,6 +26,10 @@ public class Airport {
 
     }
 
+    public String toString() {
+        return "Airport<"+this.getName()+">";
+    }
+
     @Override
     public int hashCode() {
         return name.hashCode();

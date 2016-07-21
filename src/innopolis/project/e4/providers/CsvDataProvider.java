@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import static java.time.LocalDate.*;
  * CSV-files based data-provider
  */
 public class CsvDataProvider implements DataProvider {
-    private final String FlightsDirectoryName = "Flights";
+    private final String FlightsDirectoryName = "flights";
     private final String UsersSourceFile = "Users.csv";
     private HashMap<Airport, HashMap<Airport, HashSet<Flight>>> flightsByAirports;
     private HashMap<Integer, User> users;
@@ -77,6 +78,7 @@ public class CsvDataProvider implements DataProvider {
 
     private boolean parseFlightsCSV(File f) {
         BufferedReader bufReader;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         {
             try {
                 bufReader = new BufferedReader(new FileReader(f));
@@ -84,8 +86,8 @@ public class CsvDataProvider implements DataProvider {
                 while ((readingLine = bufReader.readLine()) != null) {
                     String[] line = readingLine.replaceAll("\"", "").split(separator);
                     //DateFormat df = new SimpleDateFormat(datePattern);
-                    LocalDateTime ldtF = LocalDateTime.parse(line[3]);
-                    LocalDateTime ldtT = LocalDateTime.parse(line[4]);
+                    LocalDateTime ldtF = LocalDateTime.parse(line[3], dateFormat);
+                    LocalDateTime ldtT = LocalDateTime.parse(line[4], dateFormat);
                     //Date dateD = df.parse(line[3]);
                     //Date dateA = df.parse(line[4]);
                     airports.put(line[1], new Airport(line[1]));

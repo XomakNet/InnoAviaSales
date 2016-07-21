@@ -5,6 +5,7 @@ import innopolis.project.e4.models.Flight;
 import innopolis.project.e4.models.Path;
 import innopolis.project.e4.providers.DataProvider;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class SearchOptimizer {
 //curr посещенные вершины
     public List<Path> getPathesBetween(final Airport src,
                                          final Airport dst,
-                                         final Date date,
+                                         final LocalDateTime date,
                                          final Criterion criterion) {
         minimalPathName.push(src);
         dfsFlighting(src, dst);

@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -49,20 +51,15 @@ public class CsvDataProviderTest {
         airports.addAll(airportsSet);
     }
 
-    private Date getRandomIncreasedDate(final Date basedOnDate, int days, int hours, int minutes) {
+    private LocalDateTime getRandomIncreasedDate(final LocalDateTime basedOnDate, int days, int hours, int minutes) {
         int daysPlus = rand.nextInt(days);
         int hoursPlus = rand.nextInt(hours);
         int minutesPlus = rand.nextInt(minutes);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(basedOnDate);
-        cal.add(Calendar.DATE, daysPlus);
-        cal.add(Calendar.HOUR, hoursPlus);
-        cal.add(Calendar.MINUTE, minutesPlus);
-        return cal.getTime();
+        return basedOnDate.plusDays(daysPlus).plusHours(hoursPlus).plusMinutes(minutesPlus);
     }
 
     private Set<Flight> generateFlights(final int number, final String airline) {
-        Date currentDate = new Date();
+        LocalDateTime currentDate = LocalDateTime.now();
         Set<Flight> generatedFlights = new HashSet<>();
         for(int i=0; i < number; i++) {
             int flightNumber = i;
@@ -73,11 +70,11 @@ public class CsvDataProviderTest {
                 airportFromIndex = rand.nextInt(airports.size());
                 airportToIndex = rand.nextInt(airports.size());
             }
-            while(airportFromIndex != airportToIndex);
+            while(airportFromIndex == airportToIndex);
             int freePlaces = rand.nextInt(700);
             float cost = Math.abs(rand.nextFloat()) * 1000;
-            Date departureDate = getRandomIncreasedDate(currentDate, 10, 20, 59);
-            Date arrivalDate = getRandomIncreasedDate(departureDate, 1, 23, 59);
+            LocalDateTime departureDate = getRandomIncreasedDate(currentDate, 10, 20, 59);
+            LocalDateTime arrivalDate = getRandomIncreasedDate(departureDate, 1, 23, 59);
 
             generatedFlights.add(new Flight(i, departureDate, arrivalDate, cost, freePlaces, airline, airports.get(airportFromIndex), airports.get(airportToIndex)));
 
@@ -91,12 +88,14 @@ public class CsvDataProviderTest {
         Set<Flight> generatedFlights = generateFlights(number, airline);
         Iterator<Flight> iterator = generatedFlights.iterator();
         PrintWriter writer = new PrintWriter(path+"/"+airline+".csv", "UTF-8");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
         while (iterator.hasNext()) {
             Flight curr = iterator.next();
+            //System.out.println(String.format("%s %s", curr.getFrom().getName(), curr.getTo().getName()));
+            //System.out.println();
             writer.println(String.format("\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"",
-                    curr.getFlightNumber(), curr.getFrom().getName(), curr.getTo().getName(), dateFormat.format(curr.getDepartureDateTime()),
+                    curr.getFlightNumber(), curr.getFrom().getName(), curr.getTo().getName(), curr.getDepartureDateTime().format(dateFormat),
                     dateFormat.format(curr.getArrivalDateTime()), curr.getCost(), curr.getFreePlaces()));
             if (flightsByAirports.containsKey(curr.getFrom())) {
                 HashMap<Airport, HashSet<Flight>> flightsToAirport = flightsByAirports.get(curr.getFrom());
@@ -188,7 +187,7 @@ public class CsvDataProviderTest {
     public void testPutUser() {
         int id = rand.nextInt(10000);
         assertNull(dp.getUserById(id));
-        User userAdded = new User(id, "Test user", "Test data", new Date());
+        User userAdded = new User(id, "Test user", "Test data", LocalDateTime.now());
         dp.putUser(userAdded);
         assertEquals(dp.getUserById(id), userAdded);
     }

@@ -8,6 +8,7 @@ import innopolis.project.e4.providers.TestDataProvider;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -40,16 +41,11 @@ public class SearchOptimizerTest {
         so = new SearchOptimizer(dp);
     }
 
-    private Date getRandomIncreasedDate(final Date basedOnDate, int days, int hours, int minutes) {
+    private LocalDateTime getRandomIncreasedDate(final LocalDateTime basedOnDate, int days, int hours, int minutes) {
         int daysPlus = rand.nextInt(days);
         int hoursPlus = rand.nextInt(hours);
         int minutesPlus = rand.nextInt(minutes);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(basedOnDate);
-        cal.add(Calendar.DATE, daysPlus);
-        cal.add(Calendar.HOUR, hoursPlus);
-        cal.add(Calendar.MINUTE, minutesPlus);
-        return cal.getTime();
+        return basedOnDate.plusDays(daysPlus).plusHours(hoursPlus).plusMinutes(minutesPlus);
     }
 
     @Test
@@ -58,23 +54,21 @@ public class SearchOptimizerTest {
         GregorianCalendar gc = new GregorianCalendar();
         List<Flight> result = new LinkedList<>();
         int year = randBetween(1900, 2010);
-        int hour = randBetween(0, 24);
+        int month = randBetween(0, 11);
+        int dayOfMonth = randBetween(0,28);
+        int hours = randBetween(0, 24);
         int minutes = randBetween(0, 59);
-        int dayOfYear = randBetween(1, gc.getActualMaximum(GregorianCalendar.DAY_OF_YEAR));
-        gc.set(GregorianCalendar.YEAR, year);
-        gc.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
-        gc.set(GregorianCalendar.HOUR_OF_DAY, hour);
-        gc.set(GregorianCalendar.MINUTE, minutes);
-        Date startDate = gc.getTime();
-        Date date = startDate;
+
+        LocalDateTime startDate = LocalDateTime.of(year, month, dayOfMonth, hours, minutes);
+        LocalDateTime date = startDate;
         Airport from = null;
         Airport to = null;
         for(int i = 0; i < randBetween(1, 5); i++) {
             Airport current = new Airport(generateRandomString(3));
             to = current;
             if(previous != null) {
-                Date departureDate = getRandomIncreasedDate(date, 2, 24, 59);
-                Date arrivalDate = getRandomIncreasedDate(departureDate, 1, 24, 59);
+                LocalDateTime departureDate = getRandomIncreasedDate(date, 2, 24, 59);
+                LocalDateTime arrivalDate = getRandomIncreasedDate(departureDate, 1, 24, 59);
                 Flight flight = new Flight(rand.nextInt(), departureDate, arrivalDate, rand.nextFloat()*100,
                         rand.nextInt(150), generateRandomString(5), previous, current);
                 dp.addFlight(flight);
