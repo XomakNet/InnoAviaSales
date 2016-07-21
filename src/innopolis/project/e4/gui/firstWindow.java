@@ -13,13 +13,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class FirstWindow extends JFrame {
-    private FirstWindow() {
+    public FirstWindow() {
         setTitle("AviaSales FLIK");
         this.setBounds(300,200,500,350);
         this.setResizable(false);
-
         JTabbedPane mainWindow = new JTabbedPane();
         getContentPane().add(mainWindow);
+
         JPanel tab1 = new JPanel();
         JPanel tab2 = new JPanel();
 
@@ -39,7 +39,7 @@ public class FirstWindow extends JFrame {
         JCheckBox check = new JCheckBox("Business class", false);
         JButton button = new JButton("Find trip!");
 
-//        tab1.setLayout(new GridLayout(0, 2, 1, 1));  // standard layout
+      //tab1.setLayout(new GridLayout(0, 2, 1, 1));  // standard layout
         tab1.setLayout(null);
 
         Insets insets = tab1.getInsets();
@@ -92,6 +92,14 @@ public class FirstWindow extends JFrame {
                 size.width, size.height);
 
 
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(radio1);
+        group.add(radio2);
+
+        tab1.add(radio1);
+        tab1.add(radio2);
+
         tab1.add(labelInputDate);
         tab1.add(inputDateDay);
         tab1.add(inputDateMonth);
@@ -100,27 +108,19 @@ public class FirstWindow extends JFrame {
         tab1.add(inputFrom);
         tab1.add(labelInputTo);
         tab1.add(inputTo);
-        tab1.add(radio1);
-        tab1.add(radio2);
         tab1.add(check);
         tab1.add(button);
         radio1.setSelected(true);
 
 
-
         class ButtonEventListener implements ActionListener {
             public void actionPerformed(ActionEvent e) {
-                String message = "";
-                message += "We have found best flight for You!\n";
-                message += "Date of your departure: " + inputDateDay.getText() + "\n";
-                message += (radio1.isSelected() ? "Oneway ticket " : "Round trip ticket ")
-                        + "was chosen.\n";
-                message += ((check.isSelected())
-                        ? "Business class." : "Econom class.");
-                JOptionPane.showMessageDialog(null,
-                        message,
-                        "Flight chosen!",
-                        JOptionPane.PLAIN_MESSAGE);
+
+                mainWindow.setVisible(false);
+                dispose();
+                SecondWindow secondWindow = new SecondWindow();
+
+                secondWindow.setVisible(true);
             }
         }
 
@@ -128,8 +128,11 @@ public class FirstWindow extends JFrame {
     }
 
 
+
+
     public static void main(String[] args) {
         FirstWindow tp = new FirstWindow();
+        SecondWindow sw = new SecondWindow();
         tp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         tp.setVisible(true);
 
