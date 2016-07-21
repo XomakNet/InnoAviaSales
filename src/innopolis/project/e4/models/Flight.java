@@ -1,6 +1,7 @@
 package innopolis.project.e4.models;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -11,15 +12,16 @@ public class Flight {
 
     private int id;
     private int flightNumber;
-    private Date departureDateTime;
-    private Date arrivalDateTime;
+    private LocalDateTime departureDateTime;
+    private LocalDateTime arrivalDateTime;
     private Float cost;
     private int freePlaces;
     private String airline;
     private Airport from;
     private Airport to;
+    private static final String separator = ";";
 
-    public Flight(final int flightNumber, final Date departureDateTime, final Date arrivalDateTime, final Float cost, final int freePlaces, final String airline, final Airport from, final Airport to) {
+    public Flight(final int flightNumber, final LocalDateTime departureDateTime, final LocalDateTime arrivalDateTime, final Float cost, final int freePlaces, final String airline, final Airport from, final Airport to) {
         this.departureDateTime = departureDateTime;
         this.arrivalDateTime = arrivalDateTime;
         this.cost = cost;
@@ -30,11 +32,11 @@ public class Flight {
         this.flightNumber = flightNumber;
     }
 
-    public Date getDepartureDateTime() {
+    public LocalDateTime getDepartureDateTime() {
         return departureDateTime;
     }
 
-    public Date getArrivalDateTime() {
+    public LocalDateTime getArrivalDateTime() {
         return arrivalDateTime;
     }
 
@@ -87,5 +89,18 @@ public class Flight {
         result = 31 * result + departureDateTime.hashCode();
         result = 31 * result + airline.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString(){
+        String str = "";
+        str += flightNumber + separator;
+        str += from + separator;
+        str += to + separator;
+        str += departureDateTime + separator;
+        str += arrivalDateTime + separator;
+        str += cost + separator;
+        str += freePlaces;
+        return str;
     }
 }

@@ -1,5 +1,6 @@
 package innopolis.project.e4.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -11,9 +12,10 @@ public class User {
     private int id;
     private String name;
     private String passportData;
-    private Date dateOfBirth;
+    private LocalDateTime dateOfBirth;
+    private String separator = ";";
 
-    public User(final int id, final String name, final String passportData, final Date dateOfBirth) {
+    public User(final int id, final String name, final String passportData, final LocalDateTime dateOfBirth) {
         this.id = id;
         this.name = name;
         this.passportData = passportData;
@@ -33,6 +35,16 @@ public class User {
 
         return id == user.id;
 
+    }
+
+    @Override
+    public String toString(){
+        String sResult = "";
+        sResult += id + separator;
+        sResult += name + separator;
+        sResult += passportData.toString() + separator;
+        sResult += dateOfBirth.toString();
+        return  sResult;
     }
 
     @Override
