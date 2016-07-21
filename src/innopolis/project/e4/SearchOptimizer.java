@@ -43,7 +43,7 @@ public class SearchOptimizer {
 
         for(int i = 0; i < neighbours.size(); i++) {
             minimalPathName.push(neighbours.get(i));
-            if(neighbours.get(i) == dst) {
+            if(neighbours.get(i).equals(dst)) {
                 resultFli.push(minimalPathName);
                 minimalPathName.pop();
                 break;
@@ -64,6 +64,12 @@ public class SearchOptimizer {
             else{
                 dfsFlighting(neighbours.get(i), dst);
             }
+        }
+    }
+
+    public void getFlight(final Date date,
+                          final Criterion criterion) {
+        for (int i = 0; i < resultFli.size(); i++) {
         }
     }
 }
