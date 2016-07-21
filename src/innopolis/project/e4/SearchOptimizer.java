@@ -16,7 +16,7 @@ public class SearchOptimizer {
     enum Criterion {COST, TIME}
     private DataProvider provider;
     Stack<Airport> minimalPathName = new Stack<>();
-    LinkedList<Stack<Airport>> resultFli = new LinkedList<Stack<Airport>>();
+    Set<Stack<Airport>> resultFli = new HashSet<Stack<Airport>>();
     int MaxTrevelingCount = 5;
 
     public SearchOptimizer(final DataProvider provider) {
@@ -32,19 +32,21 @@ public class SearchOptimizer {
                                          final Date date,
                                          final Criterion criterion) {
         minimalPathName.push(src);
-        dfsFlighting(src, dst);
+        if(!src.equals(dst))
+            dfsFlighting(src, dst);
         //run func dfs;
         return null;
     }
 
     private void dfsFlighting(final Airport src,
                                         final Airport dst) {
-        List<Airport> neighbours = null;//getAirportsMates(src);
-
-        for(int i = 0; i < neighbours.size(); i++) {
-            minimalPathName.push(neighbours.get(i));
-            if(neighbours.get(i).equals(dst)) {
-                resultFli.push(minimalPathName);
+        Set<Airport> neighbours = provider.getAirportsAchievableFrom(src);
+        Iterator<Airport> it = neighbours.iterator();
+        while (it.hasNext()) {
+            Airport neibor = it.next();
+            minimalPathName.push(neibor);
+            if(neibor.equals(dst)) {
+                resultFli.add(minimalPathName);
                 minimalPathName.pop();
                 break;
             }
@@ -52,7 +54,7 @@ public class SearchOptimizer {
                 if(neighbours.contains(dst)) {
                     minimalPathName.pop();
                     minimalPathName.push(dst);
-                    resultFli.push(minimalPathName);
+                    resultFli.add(minimalPathName);
                     minimalPathName.pop();
                     break;
                 }
@@ -62,7 +64,7 @@ public class SearchOptimizer {
                 }
             }
             else{
-                dfsFlighting(neighbours.get(i), dst);
+                dfsFlighting(neibor, dst);
             }
         }
     }
