@@ -1,6 +1,6 @@
 package innopolis.project.e4.answers;
 
-import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.Path;
 
 import java.util.List;
 
@@ -9,19 +9,19 @@ import java.util.List;
  * Stores answer on user's request for a round trip
  */
 public class RoundTripSearchAnswer extends SearchAnswer {
-    private List<List<Flight>> directFlights;
-    private List<List<Flight>> returnFlights;
+    private List<Path> directPaths;
+    private List<Path> returnPaths;
 
-    public RoundTripSearchAnswer(final List<List<Flight>> directFlights, final List<List<Flight>> returnFlights) {
-        this.directFlights = directFlights;
-        this.returnFlights = returnFlights;
+    public RoundTripSearchAnswer(final List<Path> directPaths, final List<Path> returnPaths) {
+        this.directPaths = directPaths;
+        this.returnPaths = returnPaths;
     }
 
-    public List<List<Flight>> getDirectFlights() {
-        return directFlights;
+    public List<Path> getDirectPaths() {
+        return directPaths;
     }
 
-    public List<List<Flight>> getReturnFlights() {
-        return returnFlights;
+    public List<Path> getReturnPaths() {
+        return returnPaths;
     }
 }
