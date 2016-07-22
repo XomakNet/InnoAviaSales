@@ -87,8 +87,8 @@ public class SearchOptimizerTest {
             previous = current;
         }
         List<Path> testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
-        assertEquals(result.size(), 1);
-        assertEquals(testResult.get(0).getFlightsSequence(), result);
+        assertEquals(testResult.size(), 1);
+        assertEquals(result, testResult.get(0).getFlightsSequence());
         testResult = so.getPathesBetween(from, to, date, SearchOptimizer.Criterion.COST);
         assertNull(testResult);
     }
