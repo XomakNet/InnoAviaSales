@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 public class CsvDataProviderTest {
     private CsvDataProvider dp;
     private List<Airport> airports = new LinkedList<>();
-    private HashMap<Airport, HashMap<Airport, Set<Flight>>> flightsByAirports;
+    private HashMap<Airport, HashMap<Airport, HashSet<Flight>>> flightsByAirports = new HashMap<Airport, HashMap<Airport, HashSet<Flight>>>();
     private Random rand = new Random();
 
     private String generateRandomString(int number) {
@@ -99,21 +99,21 @@ public class CsvDataProviderTest {
                     curr.getFlightNumber(), curr.getFrom().getName(), curr.getTo().getName(), dateFormat.format(curr.getDepartureDateTime()),
                     dateFormat.format(curr.getArrivalDateTime()), curr.getCost(), curr.getFreePlaces()));
             if (flightsByAirports.containsKey(curr.getFrom())) {
-                HashMap<Airport, Set<Flight>> flightsToAirport = flightsByAirports.get(curr.getFrom());
+                HashMap<Airport, HashSet<Flight>> flightsToAirport = flightsByAirports.get(curr.getFrom());
                 if (flightsToAirport.containsKey(curr.getTo())) {
                     Set<Flight> flights = flightsToAirport.get(curr.getTo());
                     flights.add(curr);
                 }
                 else {
-                    Set<Flight> flights = new HashSet<>();
+                    HashSet<Flight> flights = new HashSet<>();
                     flights.add(curr);
                     flightsToAirport.put(curr.getTo(), flights);
                 }
             }
             else {
-                Set<Flight> flights = new HashSet<>();
+                HashSet<Flight> flights = new HashSet<>();
                 flights.add(curr);
-                HashMap<Airport, Set<Flight>> flightsToAirport = new HashMap<>();
+                HashMap<Airport, HashSet<Flight>> flightsToAirport = new HashMap<>();
                 flightsToAirport.put(curr.getTo(), flights);
                 flightsByAirports.put(curr.getFrom(), flightsToAirport);
             }
@@ -137,7 +137,6 @@ public class CsvDataProviderTest {
     @Before
     public void init() throws Exception {
         System.out.println("Setting up ...: " + generateTestData().toString());
-        System.out.println(airports);
         dp = new CsvDataProvider(generateTestData().toString());
     }
 
@@ -169,10 +168,10 @@ public class CsvDataProviderTest {
                 Airport toAirport = airportsIteratorSecond.next();
                 Set<Flight> testResult = dp.getFlightsBetween(fromAirport, toAirport);
                 if(flightsByAirports.containsKey(fromAirport)) {
-                    HashMap<Airport, Set<Flight>> flightsFromAirport = flightsByAirports.get(fromAirport);
+                    HashMap<Airport, HashSet<Flight>> flightsFromAirport = flightsByAirports.get(fromAirport);
                     if(flightsFromAirport.containsKey(toAirport)) {
                         Set<Flight> flightsBetween = flightsFromAirport.get(toAirport);
-                        assertEquals(testResult, flightsBetween);
+                        assertEquals(flightsBetween, testResult);
                     }
                     else {
                         assertNull(testResult);

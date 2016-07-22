@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class TestDataProvider implements DataProvider {
     private Set<Airport> airports = new HashSet<>();
-    private HashMap<Airport, HashMap<Airport, Set<Flight>>> flightsByAirports;
+    private HashMap<Airport, HashMap<Airport, Set<Flight>>> flightsByAirports = new HashMap<Airport, HashMap<Airport, Set<Flight>>>();
 
     public void addFlight(final Flight flight) {
         if(!airports.contains(flight.getFrom())) {

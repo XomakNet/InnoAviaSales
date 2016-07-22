@@ -20,6 +20,10 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public int getID(){
+        return id;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

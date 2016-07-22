@@ -2,6 +2,8 @@ package innopolis.project.e4;
 
 import innopolis.project.e4.models.Airport;
 import innopolis.project.e4.models.Flight;
+import innopolis.project.e4.models.Path;
+import innopolis.project.e4.providers.DataProvider;
 import innopolis.project.e4.providers.TestDataProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import static org.junit.Assert.*;
  */
 public class SearchOptimizerTest {
     private SearchOptimizer so;
-    private TestDataProvider dp;
+    private TestDataProvider dp = new TestDataProvider();
     private Random rand = new Random();
 
     private int randBetween(int start, int end) {
@@ -84,9 +86,10 @@ public class SearchOptimizerTest {
             }
             previous = current;
         }
-        List<Flight> testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
-        assertEquals(testResult, result);
-        testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
+        List<Path> testResult = so.getPathesBetween(from, to, startDate, SearchOptimizer.Criterion.COST);
+        assertEquals(result.size(), 1);
+        assertEquals(testResult.get(0).getFlightsSequence(), result);
+        testResult = so.getPathesBetween(from, to, date, SearchOptimizer.Criterion.COST);
         assertNull(testResult);
     }
 }
