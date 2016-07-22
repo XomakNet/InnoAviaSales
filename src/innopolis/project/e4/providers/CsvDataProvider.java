@@ -90,7 +90,9 @@ public class CsvDataProvider implements DataProvider {
                     LocalDateTime ldtT = LocalDateTime.parse(line[4], dateFormat);
                     //Date dateD = df.parse(line[3]);
                     //Date dateA = df.parse(line[4]);
+                    if(!airports.containsKey(line[1]))
                     airports.put(line[1], new Airport(line[1]));
+                    if(!airports.containsKey(line[2]))
                     airports.put(line[2], new Airport(line[2]));
                     Flight fTmp = new Flight(
                             Integer.parseInt(line[0]),
@@ -104,21 +106,26 @@ public class CsvDataProvider implements DataProvider {
                             airports.get(line[1]),
                             airports.get(line[2]));
                     flights.add(fTmp);
-                    if (null != airports.get(fTmp) && flightsByAirports.containsKey(airports.get(fTmp.getFrom()))) {
-                        if (flightsByAirports.get(fTmp.getFrom()).containsKey(fTmp.getTo())) {
-                            flightsByAirports.get(fTmp.getFrom()).get(fTmp.getTo()).add(fTmp);
-                        } else {
+                    if (null != airports
+                            &&
+                            airports.containsKey(fTmp.getFrom().getName())){
+                        if(flightsByAirports.containsKey(airports.get(fTmp.getFrom().getName()))) {
+                            if (flightsByAirports.get(fTmp.getFrom()).containsKey(fTmp.getTo())) {
+                                flightsByAirports.get(fTmp.getFrom()).get(fTmp.getTo()).add(fTmp);
+                            } else {
+                                flightsByAirports.get(fTmp.getFrom()).put(fTmp.getTo(), new HashSet<Flight>());
+                                flightsByAirports.get(fTmp.getFrom()).get(fTmp.getTo()).add(fTmp);
+                            }
+                        }else {
+                            flightsByAirports.put(
+                                    fTmp.getFrom(),
+                                    new HashMap<Airport, HashSet<Flight>>());
                             flightsByAirports.get(fTmp.getFrom()).put(fTmp.getTo(), new HashSet<Flight>());
                             flightsByAirports.get(fTmp.getFrom()).get(fTmp.getTo()).add(fTmp);
                         }
-                    } else {
-                        flightsByAirports.put(
-                                fTmp.getFrom(),
-                                new HashMap<Airport, HashSet<Flight>>());
-                        flightsByAirports.get(fTmp.getFrom()).put(fTmp.getTo(), new HashSet<Flight>());
-                        flightsByAirports.get(fTmp.getFrom()).get(fTmp.getTo()).add(fTmp);
                     }
                 }
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 return false;
@@ -142,6 +149,17 @@ public class CsvDataProvider implements DataProvider {
         if (flightsByAirports.containsKey(from)) {
             if (flightsByAirports.get(from).containsKey(to))
                 return flightsByAirports.get(from).get(to);
+        }
+        return null;
+    }
+
+    public Object getFlight(int i){
+        if(flightsByAirports!=null){
+            Iterator iter = flights.iterator();
+            for(;iter.hasNext()&&i>0;i--) {
+                iter.next();
+            }
+            return  iter.next();
         }
         return null;
     }
