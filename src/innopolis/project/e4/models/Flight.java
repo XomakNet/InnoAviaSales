@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by Xomak on 14.07.2016.
  * Stores flight-related information
  */
-public class Flight {
+public class Flight implements Comparable {
 
     private int id;
     private int flightNumber;
@@ -87,5 +87,11 @@ public class Flight {
         result = 31 * result + departureDateTime.hashCode();
         result = 31 * result + airline.hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(Object obj) {
+        Flight second = (Flight) obj;
+        return this.departureDateTime.compareTo(second.departureDateTime);
     }
 }

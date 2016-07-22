@@ -14,8 +14,9 @@ import java.util.List;
  */
 public class SearchOptimizer {
     enum Criterion {COST, TIME}
+
     private DataProvider provider;
-    Stack<Airport> minimalPathName = new Stack<>();
+    private Stack<Airport> minimalPathName = new Stack<>();
     Set<Stack<Airport>> resultFli = new HashSet<Stack<Airport>>();
     int MaxTrevelingCount = 5;
 
@@ -26,52 +27,88 @@ public class SearchOptimizer {
     public void rebuildPaths() {
 
     }
-//curr посещенные вершины
+
+    //curr посещенные вершины
     public List<Path> getPathesBetween(final Airport src,
-                                         final Airport dst,
-                                         final Date date,
-                                         final Criterion criterion) {
+                                       final Airport dst,
+                                       final Date date,
+                                       final Criterion criterion) {
+        List<Path> result = new LinkedList<Path>();
         minimalPathName.push(src);
-        if(!src.equals(dst))
+        if (!src.equals(dst))
             dfsFlighting(src, dst);
-        //run func dfs;
-        return null;
+        result = getFlight(date);
+        return result;
     }
 
     private void dfsFlighting(final Airport src,
-                                        final Airport dst) {
+                              final Airport dst) {
         Set<Airport> neighbours = provider.getAirportsAchievableFrom(src);
         Iterator<Airport> it = neighbours.iterator();
         while (it.hasNext()) {
             Airport neibor = it.next();
             minimalPathName.push(neibor);
-            if(neibor.equals(dst)) {
+            if (neibor.equals(dst)) {
+                minimalPathName.push(dst);
                 resultFli.add(minimalPathName);
                 minimalPathName.pop();
                 break;
             }
-            if(MaxTrevelingCount == minimalPathName.size()) {
-                if(neighbours.contains(dst)) {
+            if (MaxTrevelingCount == minimalPathName.size()) {
+                if (neighbours.contains(dst)) {
                     minimalPathName.pop();
                     minimalPathName.push(dst);
                     resultFli.add(minimalPathName);
                     minimalPathName.pop();
                     break;
-                }
-                else {
+                } else {
                     minimalPathName.pop();
                     break;
                 }
-            }
-            else{
+            } else {
                 dfsFlighting(neibor, dst);
             }
         }
     }
 
-    public void getFlight(final Date date,
-                          final Criterion criterion) {
-        for (int i = 0; i < resultFli.size(); i++) {
+    public List<Path> getFlight(final Date date) {
+        List<Path> resultFlight = new LinkedList<>();
+        Path onceOfThePath = new Path();
+        Iterator<Stack<Airport>> it = resultFli.iterator();
+        while (it.hasNext()) { // all Airports
+            Stack<Airport> neibor = it.next();
+            Airport [] someAirport = new Airport[neibor.size()];
+            for(int i = neibor.size() - 1; i > -1; --i) { // stack = list
+                someAirport[i] = neibor.pop();
+            }
+            for(int j = someAirport.length - 1; j - 1 > -1; --j) { //Stack
+                Airport src = someAirport[j];
+                Airport dst = someAirport[j - 1];
+                Set<Flight> setFlight = new HashSet<>();
+
+                setFlight = provider.getFlightsBetween(src, dst);
+                if(setFlight != null) {
+                    onceOfThePath = new Path();
+                    Iterator<Flight> itF = setFlight.iterator();
+                    while (itF.hasNext()) {
+                        Flight ownFli = itF.next();
+                        if (onceOfThePath != null) {
+                            if (ownFli.compareTo(date) >= 0) {
+                                onceOfThePath.addFlight(ownFli);
+                            } else {
+                                break;
+                            }
+                        } else {
+                            if (ownFli.compareTo(date) >= 0 &&
+                                    onceOfThePath.getFlightsSequence().get(onceOfThePath.getFlightsSequence().size() - 1).compareTo(ownFli) >= 0) {
+                                onceOfThePath.addFlight(ownFli);
+                            } else break;
+                        }
+                    }
+                }
+            }
+            resultFlight.add(onceOfThePath);
         }
+        return resultFlight;
     }
 }
